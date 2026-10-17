@@ -1,5 +1,5 @@
 /**
- * Definiciones de tipos para GestiónDoc (Documentos, Tareas, Comentarios, Favoritos, etc.)
+ * Definiciones de tipos para GestiónDoc
  */
 
 export interface Documento {
@@ -12,13 +12,9 @@ export interface Documento {
   subido_por_email: string;
   creado_en: string;
   carpeta?: string | null;
-  eliminado_en?: string | null;
-  eliminado_por?: string | null;
 }
 
-export type TipoFiltro = 'todos' | 'pdf' | 'word' | 'excel' | 'imagen' | 'otro' | 'favoritos' | 'recientes' | 'papelera';
-
-export type Ordenamiento = 'recientes' | 'antiguos' | 'nombre_asc' | 'tamano_desc';
+export type TipoFiltro = 'todos' | 'pdf' | 'word' | 'excel' | 'imagen' | 'otro';
 
 export interface ToastMessage {
   id: string;
@@ -26,31 +22,6 @@ export interface ToastMessage {
   mensaje: string;
 }
 
-export interface DirectoriUser {
-  id: string;
-  nombre: string | null;
-  email: string;
-}
-
-export interface Tarea {
-  id: string;
-  titulo: string;
-  descripcion?: string;
-  estado: 'pendiente' | 'en_progreso' | 'completada';
-  prioridad: 'baja' | 'media' | 'alta';
-  fecha_limite?: string;
-  asignado_a: string;
-  asignado_a_email?: string;
-  documento_id?: string | null;
-  creado_por?: string;
-  creado_en?: string;
-}
-
-export interface TareaComentario {
-  id: string;
-  tarea_id: string;
-  autor_id: string;
-  autor_email: string;
-  texto: string;
-  creado_en: string;
-}
+export type CarpetaSeleccion = 'todas' | '__sin__' | string;
+export type Orden = 'recientes' | 'antiguos' | 'nombre' | 'tamano';
+export type Vista = 'tarjetas' | 'tabla';

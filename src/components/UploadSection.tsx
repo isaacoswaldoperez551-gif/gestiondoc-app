@@ -4,12 +4,12 @@
 import React, { useState, useRef } from 'react';
 import { supabase } from '../supabase';
 import { limpiarNombre, clasificarTipo } from '../utils';
-import { FileUp, X, AlertCircle, CheckCircle2, Loader2, Folder } from 'lucide-react';
+import { Upload, FileUp, X, AlertCircle, CheckCircle2, Loader2 } from 'lucide-react';
 
 interface UploadSectionProps {
   userId: string;
   userEmail: string;
-  carpetaActual: string | null;
+  carpeta?: string | null;
   onUploadComplete: () => void;
   addToast: (mensaje: string, tipo?: 'success' | 'error' | 'info') => void;
 }
@@ -24,7 +24,7 @@ interface ArchivoSubiendo {
 export const UploadSection: React.FC<UploadSectionProps> = ({
   userId,
   userEmail,
-  carpetaActual,
+  carpeta = null,
   onUploadComplete,
   addToast,
 }) => {
@@ -47,8 +47,6 @@ export const UploadSection: React.FC<UploadSectionProps> = ({
 
     setArchivosActivos((prev) => [...prev, ...nuevosArchivos]);
     setSubiendoGeneral(true);
-
-    const carpetaDestino = carpetaActual && carpetaActual !== 'sin_carpeta' ? carpetaActual : null;
 
     for (let i = 0; i < fileArray.length; i++) {
       const file = fileArray[i];
@@ -91,7 +89,7 @@ export const UploadSection: React.FC<UploadSectionProps> = ({
           tipo: tipoClasificado,
           subido_por: userId,
           subido_por_email: userEmail,
-          carpeta: carpetaDestino,
+          ...(carpeta ? { carpeta } : {}),
         });
 
         if (dbError) {
@@ -161,19 +159,8 @@ export const UploadSection: React.FC<UploadSectionProps> = ({
     setArchivosActivos([]);
   };
 
-  const destinoTexto =
-    carpetaActual && carpetaActual !== 'sin_carpeta'
-      ? `Carpeta actual: ${carpetaActual}`
-      : 'Raíz (Sin carpeta)';
-
   return (
     <div className="space-y-4">
-      {/* Indicador de destino de subida */}
-      <div className="flex items-center gap-2 px-4 py-2 bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-900/60 rounded-xl text-xs text-indigo-800 dark:text-indigo-300">
-        <Folder className="w-4 h-4 shrink-0" />
-        <span>Los nuevos archivos se guardarán en: <strong>{destinoTexto}</strong></span>
-      </div>
-
       {/* Zona de Arrastrar y Soltar */}
       <div
         onDragOver={handleDragOver}
