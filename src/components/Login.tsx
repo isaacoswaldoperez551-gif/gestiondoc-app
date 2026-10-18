@@ -50,6 +50,25 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess, addToast }) => {
     }
   };
 
+  const handleOlvidePassword = async () => {
+    if (!email.trim()) {
+      addToast('Escribe tu correo arriba y vuelve a pulsar "¿Olvidaste tu contraseña?".', 'info');
+      return;
+    }
+    setCargando(true);
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+        redirectTo: window.location.origin + window.location.pathname,
+      });
+      if (error) throw error;
+      addToast('Si el correo existe, recibirás un enlace para restablecer tu contraseña.', 'success');
+    } catch (err: any) {
+      addToast(err?.message || 'No se pudo enviar el correo de recuperación.', 'error');
+    } finally {
+      setCargando(false);
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 px-4 py-12 transition-colors">
       <div className="max-w-md w-full space-y-8 bg-white dark:bg-slate-900 p-8 rounded-2xl shadow-xl border border-slate-200/80 dark:border-slate-800">
@@ -104,6 +123,17 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess, addToast }) => {
                 />
               </div>
             </div>
+          </div>
+
+          <div className="text-right -mt-2">
+            <button
+              type="button"
+              onClick={handleOlvidePassword}
+              disabled={cargando}
+              className="text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:underline disabled:opacity-50"
+            >
+              ¿Olvidaste tu contraseña?
+            </button>
           </div>
 
           <div>
